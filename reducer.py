@@ -20,21 +20,15 @@ import sys
 # Cash  455.51
 
 # Sum of all sales (values) is initialized with zero, we just started
+sum_sales = 0
 count = 0
 
 # Previous key is initialized with None, we just started
 previous_key = None
 
-# For each new line in the standard input 
+# For each new line in the standard input   
 for line in sys.stdin:
-
-    # split the line at the tabulator ("\t")
-    # strip removes whitespaces and new lines at the beginning and end of the line
-    # The result is a tuple with 2 elements
-    data = line.strip().split("\t")
-
-    # Store the 2 elements of this line in seperate variables
-    key, value = data
+    key, value = line.strip().split("\t")
 
     # Do we have a previous_key (previous_key != None) and 
     # is the new key different than the previous key?
@@ -45,18 +39,17 @@ for line in sys.stdin:
         # to the standart output (stdout)
         # Key and value are seperated by a tab (\t)
         # Line ends with new line (\n)
-        sys.stdout.write("{0}\t{1}\n".format(previous_key, count))
         # Sum of sales starts again with 0
-        sum_of_values = 0
+        average = sum_sales / count if count > 0 else 0
+        sys.stdout.write(f"{previous_key}\t{average:.2f}\n")
+        sum_sales = 0
+        count = 0
 
-    # Add the value to the total sales
-    # a += b is the same as a = a + b
-    # the float function transforms the value
-    # to a float data type (like decimal)
-    count += 1
-    # the previous key for the next iteration is the current key of the this iteration 
-    previous_key = key
+        sum_sales += float(value)
+        count += 1
+        previous_key = key
 
 # write the last result to stdout
-if count > 114:
-    sys.stdout.write("{0}\t{1}\n".format(previous_key, count))
+if previous_key:
+    average = sum_sales / count if count > 0 else 0
+    sys.stdout.write(f"{previous_key}\t{average:.2f}\n")
